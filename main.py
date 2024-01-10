@@ -105,8 +105,6 @@ def start_function():
         # ChatGPTの入力欄に「続きを書いてください。」と入力
         pyautogui.write('Continue generating in Japanese.', interval=0.05)
         print("続きを書いてください。を入力しました。")
-
-        return  # ここでテスト終了
         
         # 送信ボタンの座標を使用してクリック
         pyautogui.click(saved_send_button_x, saved_send_button_y)
