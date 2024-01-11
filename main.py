@@ -11,10 +11,6 @@ import json
 # Fail-Safe機能を有効にする
 pyautogui.FAILSAFE = True
 
-def exit_program():
-    print("プログラムを終了します。")
-    root.destroy()
-
 root = tkinter.Tk()
 root.title("ChatGPT 自動送信ツール")
 root.geometry("400x300")  # Set the window size to 400 pixels wide and 300 pixels tall
@@ -139,13 +135,8 @@ def stop_function():
         process_thread.join()
     print("処理を停止しました。")
 
-def resume_function():
-    # 再開ボタンの機能
-    pass
-
 # 設定の保存に使用するファイル名
 CONFIG_FILENAME = 'config.json'
-
 
 # 設定をJSONファイルに保存する関数
 def save_configuration():
@@ -214,9 +205,6 @@ start_button.pack()
 
 stop_button = tkinter.Button(root, text="Stop", command=stop_function)
 stop_button.pack()
-
-resume_button = tkinter.Button(root, text="Resume", command=resume_function)
-resume_button.pack()
 
 # プログラム起動時に設定を読み込む
 load_configuration()
