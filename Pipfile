@@ -4,15 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pyautogui = "*"
-pynput = "*"
+pyautogui = "0.9.54"
+pynput = "1.7.6"
 opencv-python = "*"
 
 [dev-packages]
 
 [requires]
 python_version = "3.11"
-python_full_version = "3.11.4"
 
 [scripts]
 start = "python main.py runserver"

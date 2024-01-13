@@ -4,23 +4,28 @@
 
 このツールは、ChatGPT の応答後に自動的に「続きを書いてください」というプロンプトを送信し、応答を促すためのものです。指定された座標に自動でクリックし、テキストを入力、送信する機能が含まれています。
 
+## 動作環境(確認済)
+
+- macOS Monterey 12.6.7
+- Python 3.11.6
+- pipenv 2023.7.23
+
 ## 環境構築
 
 本ツールを使用するためには以下のステップに従ってください。
 
 ### 必要なライブラリのインストール
 
-このツールは、`pyautogui` と `pynput` ライブラリに依存しています。これらのライブラリをインストールするには、以下のコマンドを実行してください。
+1. Pipenv のインストール
 
 ```bash
-pipenv install -r requirements.txt
+pip install pipenv
 ```
 
-requirements.txt は以下の内容である必要があります。
+2. Pipfile から環境の再現
 
 ```bash
-pynput==1.7.6
-pyautogui==0.9.54
+pipenv install
 ```
 
 ## 使い方
