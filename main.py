@@ -1,4 +1,3 @@
-import sys
 import tkinter
 import pyautogui
 import time
