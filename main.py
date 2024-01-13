@@ -15,18 +15,18 @@ root.title("ChatGPT 自動送信ツール")
 root.geometry("400x300")  # Set the window size to 400 pixels wide and 300 pixels tall
 
 # グローバル変数の初期化
-listener_thread = None
-listener_running = False
-saved_input_box_x = 0
-saved_input_box_y = 0
-saved_send_button_x = 0
-saved_send_button_y = 0
-running = False
-process_thread = None
+inputBoxListenerThread = None
+inputBoxListenerRunning = False
+inputBoxXCoordinate = 0
+inputBoxYCoordinate = 0
+sendButtonXCoordinate = 0
+sendButtonYCoordinate = 0
+isProcessRunning = False
+automationThread = None
 
 def on_input_box_coordinates_button_click(x, y, button, pressed):
-    global listener_running
-    if not listener_running:
+    global inputBoxListenerRunning
+    if not inputBoxListenerRunning:
         return False
     if pressed and button == Button.left:
         # print(f"Mouse clicked at ({x}, {y})")
@@ -35,28 +35,28 @@ def on_input_box_coordinates_button_click(x, y, button, pressed):
         # 直接GUIを更新することはスレッドの安全性に反します。
         # root.after を使用することで、スレッド間の競合を避けつつ、メインスレッドにGUIの更新をスケジュールすることができます。
         root.after(0, lambda: input_box_coordinates_label.config(text=f"X: {x}, Y: {y}"))
-        global saved_input_box_x, saved_input_box_y
-        saved_input_box_x = x
-        saved_input_box_y = y
+        global inputBoxXCoordinate, inputBoxYCoordinate
+        inputBoxXCoordinate = x
+        inputBoxYCoordinate = y
     if pressed and button == Button.right:
         input_box_coordinates_button.config(text='入力欄座標取得')
-        listener_running = False
+        inputBoxListenerRunning = False
 
 def start_listener_for_input_bot():
     with Listener(on_click=on_input_box_coordinates_button_click) as listener:
         listener.join()
 
 def input_box_coordinates_start_button():
-    global listener_thread, listener_running
-    if not listener_running:
+    global inputBoxListenerThread, inputBoxListenerRunning
+    if not inputBoxListenerRunning:
         input_box_coordinates_button.config(text='クリックして入力欄座標取得してください。右クリックで終了します。')
-        listener_running = True
-        listener_thread = threading.Thread(target=start_listener_for_input_bot)
-        listener_thread.start()
+        inputBoxListenerRunning = True
+        inputBoxListenerThread = threading.Thread(target=start_listener_for_input_bot)
+        inputBoxListenerThread.start()
 
 def on_send_button_coordinates_button_click(x, y, button, pressed):
-    global listener_running
-    if not listener_running:
+    global inputBoxListenerRunning
+    if not inputBoxListenerRunning:
         return False
     if pressed and button == Button.left:
         # print(f"Mouse clicked at ({x}, {y})")
@@ -65,56 +65,56 @@ def on_send_button_coordinates_button_click(x, y, button, pressed):
         # 直接GUIを更新することはスレッドの安全性に反します。
         # root.after を使用することで、スレッド間の競合を避けつつ、メインスレッドにGUIの更新をスケジュールすることができます。
         root.after(0, lambda: send_button_coordinates_label.config(text=f"X: {x}, Y: {y}"))
-        global saved_send_button_x, saved_send_button_y
-        saved_send_button_x = x
-        saved_send_button_y = y
+        global sendButtonXCoordinate, sendButtonYCoordinate
+        sendButtonXCoordinate = x
+        sendButtonYCoordinate = y
     if pressed and button == Button.right:
         send_button_coordinates_button.config(text='送信ボタン座標取得')
-        listener_running = False
+        inputBoxListenerRunning = False
 
 def start_listener_for_send_button():
     with Listener(on_click=on_send_button_coordinates_button_click) as listener:
         listener.join()
 
 def send_button_coordinates_start_button():
-    global listener_thread, listener_running
-    if not listener_running:
+    global inputBoxListenerThread, inputBoxListenerRunning
+    if not inputBoxListenerRunning:
         send_button_coordinates_button.config(text='クリックして入力欄座標取得してください。右クリックで終了します。')
-        listener_running = True
-        listener_thread = threading.Thread(target=start_listener_for_send_button)
-        listener_thread.start()
+        inputBoxListenerRunning = True
+        inputBoxListenerThread = threading.Thread(target=start_listener_for_send_button)
+        inputBoxListenerThread.start()
 
 def start_function():
     try:
-        global running
-        running = True
-        while running:
+        global isProcessRunning
+        isProcessRunning = True
+        while isProcessRunning:
             # 入力された待ち時間を取得
             wait_time = int(wait_time_entry.get())
             print(f"回答が書き終わるのを{wait_time}秒待っています。")
             
-            # wait_time秒待つ代わりに、0.1秒ごとにrunningを確認
+            # wait_time秒待つ代わりに、0.1秒ごとにisProcessRunningを確認
             for _ in range(int(wait_time * 10)):
-                if not running:
+                if not isProcessRunning:
                     return
                 time.sleep(0.1)
 
-            # 以下の処理はrunningがTrueの場合にのみ実行
-            if running:
+            # 以下の処理はisProcessRunningがTrueの場合にのみ実行
+            if isProcessRunning:
                 # 保存された座標を使用してテキスト入力欄にクリック
-                pyautogui.click(saved_input_box_x, saved_input_box_y)
-                print(f"Mouse clicked at ({saved_input_box_x}, {saved_input_box_y})")
+                pyautogui.click(inputBoxXCoordinate, inputBoxYCoordinate)
+                print(f"Mouse clicked at ({inputBoxXCoordinate}, {inputBoxYCoordinate})")
                 # ChatGPTの入力欄に「続きを書いてください。」と入力
                 pyautogui.write('Continue generating in Japanese.', interval=0.05)
                 print("続きを書いてください。を入力しました。")
 
-            # 'Continue generating in Japanese.'を書き終えた後もスタートボタン処理がrunningかどうかを確認
-            if not running:
+            # 'Continue generating in Japanese.'を書き終えた後もスタートボタン処理がisProcessRunningかどうかを確認
+            if not isProcessRunning:
                 return
 
-            if running:
+            if isProcessRunning:
                 # 送信ボタンの座標を使用してクリック
-                pyautogui.click(saved_send_button_x, saved_send_button_y)
+                pyautogui.click(sendButtonXCoordinate, sendButtonYCoordinate)
     except ValueError:
         print("無効な待ち時間が入力されました。数値を入力してください。")
     except Exception as e:
@@ -122,16 +122,16 @@ def start_function():
 
 def start_thread():
     """スタートボタンのスレッドを開始する関数。"""
-    global process_thread
-    process_thread = threading.Thread(target=start_function)
-    process_thread.start()
+    global automationThread
+    automationThread = threading.Thread(target=start_function)
+    automationThread.start()
 
 def stop_function():
     # ストップボタンの機能
-    global running
-    running = False
-    if process_thread is not None:
-        process_thread.join()
+    global isProcessRunning
+    isProcessRunning = False
+    if automationThread is not None:
+        automationThread.join()
     print("処理を停止しました。")
 
 # 設定の保存に使用するファイル名
@@ -141,12 +141,12 @@ CONFIG_FILENAME = 'config.json'
 def save_configuration():
     config_data = {
         'input_box': {
-            'x': saved_input_box_x,
-            'y': saved_input_box_y
+            'x': inputBoxXCoordinate,
+            'y': inputBoxYCoordinate
         },
         'send_button': {
-            'x': saved_send_button_x,
-            'y': saved_send_button_y
+            'x': sendButtonXCoordinate,
+            'y': sendButtonYCoordinate
         },
         'wait_time': wait_time_entry.get()  # ユーザー入力の待ち時間
     }
@@ -159,14 +159,14 @@ def load_configuration():
     try:
         with open(CONFIG_FILENAME, 'r') as config_file:
             config_data = json.load(config_file)
-            global saved_input_box_x, saved_input_box_y, saved_send_button_x, saved_send_button_y
-            saved_input_box_x = config_data['input_box']['x']
-            saved_input_box_y = config_data['input_box']['y']
-            saved_send_button_x = config_data['send_button']['x']
-            saved_send_button_y = config_data['send_button']['y']
+            global inputBoxXCoordinate, inputBoxYCoordinate, sendButtonXCoordinate, sendButtonYCoordinate
+            inputBoxXCoordinate = config_data['input_box']['x']
+            inputBoxYCoordinate = config_data['input_box']['y']
+            sendButtonXCoordinate = config_data['send_button']['x']
+            sendButtonYCoordinate = config_data['send_button']['y']
             # ラベルを更新する
-            input_box_coordinates_label.config(text=f"入力欄：X: {saved_input_box_x}, Y: {saved_input_box_y}")
-            send_button_coordinates_label.config(text=f"送信ボタン：X: {saved_send_button_x}, Y: {saved_send_button_y}")
+            input_box_coordinates_label.config(text=f"入力欄：X: {inputBoxXCoordinate}, Y: {inputBoxYCoordinate}")
+            send_button_coordinates_label.config(text=f"送信ボタン：X: {sendButtonXCoordinate}, Y: {sendButtonYCoordinate}")
             wait_time_entry.delete(0, tkinter.END)
             wait_time_entry.insert(0, config_data['wait_time'])
             print("設定を読み込みました。")
