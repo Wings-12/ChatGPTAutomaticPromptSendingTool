@@ -187,25 +187,28 @@ def update_config_data(config_data):
     try:
         inputBoxXCoordinate = config_data['input_box']['x']
         inputBoxYCoordinate = config_data['input_box']['y']
-        input_box_coordinates_label.config(text=f"入力欄：X: {inputBoxXCoordinate}, Y: {inputBoxYCoordinate}")
     except KeyError:
         print("設定ファイルに input_box キーが存在しません。")
         sys.exit(1)  # プログラムを終了
-
     try:
         sendButtonXCoordinate = config_data['send_button']['x']
         sendButtonYCoordinate = config_data['send_button']['y']
-        send_button_coordinates_label.config(text=f"送信ボタン：X: {sendButtonXCoordinate}, Y: {sendButtonYCoordinate}")
     except KeyError:
         print("設定ファイルに send_button キーが存在しません。")
         sys.exit(1)  # プログラムを終了
     try:
         wait_time = config_data['wait_time']
-        wait_time_entry.delete(0, tkinter.END)
-        wait_time_entry.insert(0, wait_time)
+        update_labels(inputBoxXCoordinate, inputBoxYCoordinate, sendButtonXCoordinate, sendButtonYCoordinate, wait_time)
     except KeyError:
         print("設定ファイルに wait_time キーが存在しません。")
         sys.exit(1)  # プログラムを終了
+
+# GUIのラベルを更新する関数
+def update_labels(input_box_x, input_box_y, send_button_x, send_button_y, wait_time):
+    input_box_coordinates_label.config(text=f"入力欄：X: {input_box_x}, Y: {input_box_y}")
+    send_button_coordinates_label.config(text=f"送信ボタン：X: {send_button_x}, Y: {send_button_y}")
+    wait_time_entry.delete(0, tkinter.END)
+    wait_time_entry.insert(0, wait_time)
 
 # 設定を読み込む関数
 def load_configuration():
