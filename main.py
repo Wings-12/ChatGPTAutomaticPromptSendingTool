@@ -189,8 +189,8 @@ def create_default_config_file():
         json.dump(DEFAULT_CONFIG, config_file, indent=4)
     return DEFAULT_CONFIG
 
-# 設定ファイルの設定値を更新する関数
-def update_config_data(config_data):
+# ウィンドウの設定値を更新する関数
+def update_window_data(config_data):
     # グローバル変数の更新
     global inputBoxXCoordinate, inputBoxYCoordinate, sendButtonXCoordinate, sendButtonYCoordinate
 
@@ -213,6 +213,7 @@ def update_config_data(config_data):
         print("設定ファイルに wait_time キーが存在しません。")
         sys.exit(1)  # プログラムを終了
     try:
+        # ウィンドウ位置を更新
         windowXPosition = config_data['window_position']['x']
         windowYPosition = config_data['window_position']['y']
         root.geometry(f"+{windowXPosition}+{windowYPosition}")
@@ -229,26 +230,20 @@ def update_labels(input_box_x, input_box_y, send_button_x, send_button_y, wait_t
     wait_time_entry.insert(0, wait_time)
 
 # 設定を読み込む関数
-def load_configuration():
+def read_configuration():
     try:
         with open(CONFIG_FILENAME, 'r') as config_file:
             config_data = json.load(config_file)
-            update_config_data(config_data)
-        print("設定を読み込みました。")
-        return config_data
+            return config_data
 
     except FileNotFoundError:
         print("設定ファイルが見つかりません。デフォルト値を使用して設定ファイルを作成します。")
         config_data = create_default_config_file()
-        update_config_data(config_data)
-        print("設定を読み込みました。")
         return config_data
 
     except json.JSONDecodeError:
         print("設定ファイルが破損しています。デフォルト値を使用して設定ファイルを作成します。")
         config_data = create_default_config_file()
-        update_config_data(config_data)
-        print("設定を読み込みました。")
         return config_data
 
 def save_only_window_position(config_window_position_data):
@@ -267,7 +262,7 @@ def update_window_position(x, y):
     windowYPosition = y
 
     # ウィンドウ位置を設定ファイルに保存
-    config_data = load_configuration()
+    config_data = read_configuration()
     config_data["window_position"] = {"x": x, "y": y}
     save_only_window_position(config_data)
 
@@ -305,7 +300,11 @@ stop_button = tkinter.Button(root, text="Stop", command=stop_function)
 stop_button.pack()
 
 # プログラム起動時に設定を読み込む
-load_configuration()
+config_data = read_configuration()
+print("設定を読み込みました。")
+
+update_window_data(config_data)
+print("ウィンドウの設定値を更新しました")
 
 root.protocol("WM_DELETE_WINDOW", on_closing)
 root.mainloop()
