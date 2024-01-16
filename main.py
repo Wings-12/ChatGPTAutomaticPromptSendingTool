@@ -24,6 +24,8 @@ sendButtonXCoordinate = 0
 sendButtonYCoordinate = 0
 isProcessRunning = False
 automationThread = None
+windowXPosition = 0
+windowYPosition = 0
 
 # デフォルト設定値
 DEFAULT_CONFIG = {
@@ -35,7 +37,11 @@ DEFAULT_CONFIG = {
         "x": 0,  # デフォルトの送信ボタンのX座標
         "y": 0   # デフォルトの送信ボタンのY座標
     },
-    "wait_time": 5  # デフォルトの応答待ち時間（秒）
+    "wait_time": 5,  # デフォルトの応答待ち時間（秒）
+    "window_position": {
+    "x": 230,  # デフォルトのウィンドウX座標
+    "y": 125   # デフォルトのウィンドウY座標
+    }
 }
 
 def on_input_box_coordinates_button_click(x, y, button, pressed):
@@ -166,7 +172,11 @@ def save_configuration():
             'x': sendButtonXCoordinate,
             'y': sendButtonYCoordinate
         },
-        'wait_time': wait_time_entry.get()  # ユーザー入力の待ち時間
+        'wait_time': wait_time_entry.get(),  # ユーザー入力の待ち時間
+        'window_position': {
+            'x': windowXPosition,
+            'y': windowYPosition
+        }
     }
     with open(CONFIG_FILENAME, 'w') as config_file:
         json.dump(config_data, config_file, indent=4)
@@ -202,6 +212,14 @@ def update_config_data(config_data):
     except KeyError:
         print("設定ファイルに wait_time キーが存在しません。")
         sys.exit(1)  # プログラムを終了
+    try:
+        windowXPosition = config_data['window_position']['x']
+        windowYPosition = config_data['window_position']['y']
+        root.geometry(f"+{windowXPosition}+{windowYPosition}")
+    except KeyError:
+        print("設定ファイルに window_position キーが存在しません。")
+        sys.exit(1)
+        
 
 # GUIのラベルを更新する関数
 def update_labels(input_box_x, input_box_y, send_button_x, send_button_y, wait_time):
@@ -217,17 +235,46 @@ def load_configuration():
             config_data = json.load(config_file)
             update_config_data(config_data)
         print("設定を読み込みました。")
+        return config_data
 
     except FileNotFoundError:
         print("設定ファイルが見つかりません。デフォルト値を使用して設定ファイルを作成します。")
         config_data = create_default_config_file()
         update_config_data(config_data)
         print("設定を読み込みました。")
+        return config_data
+
     except json.JSONDecodeError:
         print("設定ファイルが破損しています。デフォルト値を使用して設定ファイルを作成します。")
         config_data = create_default_config_file()
         update_config_data(config_data)
         print("設定を読み込みました。")
+        return config_data
+
+def save_only_window_position(config_window_position_data):
+    """ウィンドウ位置のみを設定ファイルに保存する関数"""
+    with open(CONFIG_FILENAME, 'w') as config_file:
+        # 設定ファイルの window_position キーの値を更新
+        config_window_position_data['window_position']['x'] = windowXPosition
+        config_window_position_data['window_position']['y'] = windowYPosition
+        json.dump(config_window_position_data, config_file, indent=4)
+        print("ウィンドウ位置を保存しました。")
+
+# ウィンドウ位置を更新する関数
+def update_window_position(x, y):
+    global windowXPosition, windowYPosition
+    windowXPosition = x
+    windowYPosition = y
+
+    # ウィンドウ位置を設定ファイルに保存
+    config_data = load_configuration()
+    config_data["window_position"] = {"x": x, "y": y}
+    save_only_window_position(config_data)
+
+# ウィンドウが閉じられるときの処理
+def on_closing():
+    update_window_position(root.winfo_x(), root.winfo_y())
+    root.destroy()
 
 input_box_coordinates_label = tkinter.Label(root, text="入力欄：X: 0, Y: 0")
 input_box_coordinates_label.pack()
@@ -260,4 +307,5 @@ stop_button.pack()
 # プログラム起動時に設定を読み込む
 load_configuration()
 
+root.protocol("WM_DELETE_WINDOW", on_closing)
 root.mainloop()
