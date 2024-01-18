@@ -271,6 +271,18 @@ def on_closing():
     update_window_position(root.winfo_x(), root.winfo_y())
     root.destroy()
 
+def toggle_topmost():
+    """
+    トグルスイッチによってウィンドウの最前面表示を切り替える
+    """
+    if topmost_var.get():
+        root.attributes('-topmost', 1)
+    else:
+        root.attributes('-topmost', 0)
+
+# トグルスイッチのための変数
+topmost_var = tkinter.IntVar(value=0)
+
 input_box_coordinates_label = tkinter.Label(root, text="入力欄：X: 0, Y: 0")
 input_box_coordinates_label.pack()
 
@@ -298,6 +310,10 @@ start_button.pack()
 
 stop_button = tkinter.Button(root, text="Stop", command=stop_function)
 stop_button.pack()
+
+# トグルスイッチの作成
+topmost_switch = tkinter.Checkbutton(root, text="Always on top", variable=topmost_var, command=toggle_topmost)
+topmost_switch.pack()
 
 # プログラム起動時に設定を読み込む
 config_data = read_configuration()
