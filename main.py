@@ -37,7 +37,7 @@ DEFAULT_CONFIG = {
         "x": 0,  # デフォルトの送信ボタンのX座標
         "y": 0   # デフォルトの送信ボタンのY座標
     },
-    "wait_time": 5,  # デフォルトの応答待ち時間（秒）
+    "wait_time": 80,  # デフォルトの応答待ち時間（秒）
     "window_position": {
     "x": 230,  # デフォルトのウィンドウX座標
     "y": 125   # デフォルトのウィンドウY座標
@@ -109,15 +109,6 @@ def start_function():
         global isProcessRunning
         isProcessRunning = True
         while isProcessRunning:
-            # 入力された待ち時間を取得
-            wait_time = int(wait_time_entry.get())
-            print(f"回答が書き終わるのを{wait_time}秒待っています。")
-            
-            # wait_time秒待つ代わりに、0.1秒ごとにisProcessRunningを確認
-            for _ in range(int(wait_time * 10)):
-                if not isProcessRunning:
-                    return
-                time.sleep(0.1)
 
             # 以下の処理はisProcessRunningがTrueの場合にのみ実行
             if isProcessRunning:
@@ -127,7 +118,7 @@ def start_function():
                 pyautogui.click(inputBoxXCoordinate, inputBoxYCoordinate)
                 print(f"Mouse clicked at ({inputBoxXCoordinate}, {inputBoxYCoordinate})")
                 # ChatGPTの入力欄に「続きを書いてください。」と入力
-                pyautogui.write('Continue generating in Japanese.', interval=0.05)
+                pyautogui.write('Continue generating in Japanese. Please write in a format that can be pasted with copy code.', interval=0.05)
                 print("続きを書いてください。を入力しました。")
 
             # 'Continue generating in Japanese.'を書き終えた後もスタートボタン処理がisProcessRunningかどうかを確認
@@ -137,6 +128,16 @@ def start_function():
             if isProcessRunning:
                 # 送信ボタンの座標を使用してクリック
                 pyautogui.click(sendButtonXCoordinate, sendButtonYCoordinate)
+            
+            # 入力された待ち時間を取得
+            wait_time = int(wait_time_entry.get())
+            print(f"回答が書き終わるのを{wait_time}秒待っています。")
+            
+            # wait_time秒待つ代わりに、0.1秒ごとにisProcessRunningを確認
+            for _ in range(int(wait_time * 10)):
+                if not isProcessRunning:
+                    return
+                time.sleep(0.1)
     except ValueError:
         print("無効な待ち時間が入力されました。数値を入力してください。")
         sys.exit(1)  # プログラムを終了
