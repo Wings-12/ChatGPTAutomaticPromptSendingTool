@@ -1,5 +1,7 @@
 # ChatGPT 自動送信ツール
 
+![App Image](./images/ApplicationImage.png)
+
 ## 概要
 
 このツールは、ChatGPT の応答後に自動的に「Continue generating in Japanese.（続きを書いてください。）」というプロンプトを送信し、応答を促すためのものです。指定された座標に自動でクリックし、テキストを入力、送信する機能が含まれています。
