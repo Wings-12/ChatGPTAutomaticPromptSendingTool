@@ -1,5 +1,7 @@
 # ChatGPT 自動送信ツール
 
+[Translate in English](./README_EN.md)
+
 ![App Image](./images/ApplicationImage.png)
 
 ## 概要
