@@ -30,7 +30,7 @@ pip install pipenv
 pipenv install
 ```
 
-## How To Use
+## How to Use
 
 0. Start the program.
    - Start command
