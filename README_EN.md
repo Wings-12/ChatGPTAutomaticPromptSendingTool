@@ -2,7 +2,7 @@
 
 [Translate in Japanese](./README.md)
 
-![App Image](./images/ApplicationImage.png)
+![App Image](./images/ApplicationImage_EN.png)
 
 ## Demo
 
