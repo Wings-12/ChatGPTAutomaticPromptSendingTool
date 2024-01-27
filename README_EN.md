@@ -48,6 +48,7 @@ pipenv run python main.py
 1. Ensure the input is in half-width characters. (※ Full-width characters may prevent accurate entry of "Continue generating in Japanese.")
 1. Press the "Start" button to start the program.
 1. If necessary, you can stop the program by pressing the "Stop" button.
+1. If necessary, you can switch between Japanese and English by using the language option menu at the bottom.
 
 ### Notes
 
