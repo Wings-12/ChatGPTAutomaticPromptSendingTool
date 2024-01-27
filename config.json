@@ -1,16 +1,16 @@
 {
     "input_box": {
-        "x": 3162,
-        "y": -62
+        "x": 670,
+        "y": 933
     },
     "send_button": {
-        "x": 3726,
-        "y": -61
+        "x": 1323,
+        "y": 938
     },
     "wait_time": "10",
     "window_position": {
-        "x": 1695,
-        "y": -790
+        "x": 1211,
+        "y": 495
     },
     "always_on_top": 1,
     "language": "English"

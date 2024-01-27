@@ -4,6 +4,12 @@
 
 ![App Image](./images/ApplicationImage.png)
 
+## Demo
+
+You can watch the demo video below:
+
+[Demo Video](demo.mp4)
+
 ## Overview
 
 This tool automatically sends the prompt "Continue generating in Japanese." It includes functionality to automatically click at specified coordinates, enter text, and send it.
