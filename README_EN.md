@@ -2,13 +2,9 @@
 
 [Translate in Japanese](./README.md)
 
-![App Image](./images/ApplicationImage.png)
-
 ## Demo
 
-You can watch the demo video below:
-
-[Demo Video](demo.mp4)
+![GIF](./demo.gif)
 
 ## Overview
 

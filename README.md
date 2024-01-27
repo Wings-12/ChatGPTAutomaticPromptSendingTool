@@ -2,7 +2,9 @@
 
 [Translate in English](./README_EN.md)
 
-![App Image](./images/ApplicationImage.png)
+## デモ
+
+![GIF](./demo.gif)
 
 ## 概要
 
