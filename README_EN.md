@@ -2,8 +2,11 @@
 
 [Translate in Japanese](./README.md)
 
+![App Image](./images/ApplicationImage.png)
+
 ## Demo
 
+\*This tool works much more smoothly than this demo.
 ![GIF](./demo.gif)
 
 ## Overview

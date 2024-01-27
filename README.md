@@ -2,8 +2,11 @@
 
 [Translate in English](./README_EN.md)
 
+![App Image](./images/ApplicationImage.png)
+
 ## デモ
 
+※実際はもっとスムーズに動作します。
 ![GIF](./demo.gif)
 
 ## 概要
